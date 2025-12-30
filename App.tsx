@@ -138,7 +138,7 @@ const App: React.FC = () => {
         customerName: s.customer_name,
         customerPhone: s.customer_phone,
         deliveryDuration: s.delivery_duration,
-        items: s.items,
+        items: s.items || [], // Ensure items is always an array
         totalAmount: s.total_amount,
         isReturned: s.is_returned
       }));
@@ -170,7 +170,7 @@ const App: React.FC = () => {
 
     const totalRevenue = sales.filter(s => !s.isReturned).reduce((sum, s) => sum + s.totalAmount, 0);
     const totalCostOfSold = sales.filter(s => !s.isReturned).reduce((sum, s) => {
-      return sum + s.items.reduce((isum, item) => {
+      return sum + (s.items || []).reduce((isum, item) => {
          const product = products.find(p => p.id === item.productId);
          const cost = product ? product.costPrice : (item.price * 0.6); 
          return isum + (cost * item.quantity);
@@ -254,7 +254,7 @@ const App: React.FC = () => {
 
     try {
       // 1. Revert Old Stock
-      for (const item of oldSale.items) {
+      for (const item of (oldSale.items || [])) {
           const { data: p } = await supabase.from('products').select('stock').eq('id', item.productId).single();
           if (p) {
               await supabase.from('products').update({ stock: p.stock + item.quantity }).eq('id', item.productId);
@@ -273,7 +273,7 @@ const App: React.FC = () => {
       if (updateError) throw updateError;
 
       // 3. Apply New Stock
-      for (const item of updatedData.items) {
+      for (const item of (updatedData.items || [])) {
           const { data: p } = await supabase.from('products').select('stock').eq('id', item.productId).single();
           if (p) {
               await supabase.from('products').update({ stock: p.stock - item.quantity }).eq('id', item.productId);
@@ -300,7 +300,7 @@ const App: React.FC = () => {
     try {
         const { error: updateError } = await supabase.from('sales').update({ is_returned: true }).eq('id', saleId);
         if (updateError) throw updateError;
-        for (const item of sale.items) {
+        for (const item of (sale.items || [])) {
             const { data: prodData } = await supabase.from('products').select('stock').eq('id', item.productId).single();
             if (prodData) {
                 await supabase.from('products').update({ stock: prodData.stock + item.quantity }).eq('id', item.productId);
