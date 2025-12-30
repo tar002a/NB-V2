@@ -10,7 +10,7 @@ import Expenses from './components/Expenses';
 import Login from './components/Login';
 import { View, Sale, Customer, Expense, CartItem, DashboardStats, ProductApp } from './types';
 import { supabase } from './lib/supabase';
-import { Database, Copy, Check, Menu, LogOut, ShieldAlert, Loader2 } from 'lucide-react';
+import { Menu, LogOut, Loader2 } from 'lucide-react';
 
 // Whitelist Configuration
 const ALLOWED_EMAILS = [
@@ -125,7 +125,7 @@ const App: React.FC = () => {
         phone: c.phone,
         address: c.address,
         totalSpent: c.total_spent,
-        last_purchase: c.last_purchase
+        lastPurchase: c.last_purchase
       }));
       setCustomers(mappedCustomers);
 
@@ -478,7 +478,7 @@ create policy "Enable all access" on products for all using (true) with check (t
 
   return (
     <div className="flex bg-[#121212] min-h-screen font-sans text-gray-100 overflow-hidden">
-      <Sidebar currentView={currentView} onChangeView={handleViewChange} isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} currentUser={isPasswordAuth ? 'Admin' : session?.user.email} />
+      <Sidebar currentView={currentView} onChangeView={handleViewChange} isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} currentUser={isPasswordAuth ? 'Admin' : session?.user?.email} />
       
       <main className="flex-1 overflow-y-auto h-screen relative w-full">
         <header className="sticky top-0 z-20 bg-[#121212]/80 backdrop-blur-md p-4 md:p-6 border-b border-[#2a2a2a] flex justify-between items-center">
@@ -495,7 +495,7 @@ create policy "Enable all access" on products for all using (true) with check (t
             </h1>
           </div>
           <div className="flex items-center gap-4">
-             {loading && !isInitialLoad && <Loader2 className="animate-spin w-4 h-4 text-primary" title="جاري التحديث..." />}
+             {loading && !isInitialLoad && <Loader2 className="animate-spin w-4 h-4 text-primary" />}
              <button onClick={handleSignOut} className="bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white p-2 rounded-lg transition-colors"><LogOut className="w-5 h-5" /></button>
           </div>
         </header>

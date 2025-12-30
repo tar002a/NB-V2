@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, RotateCcw, Search, ChevronDown, ChevronUp, AlertTriangle, Instagram, Calendar, Filter, Edit2, X, Check, Trash2, Plus, Minus, User, Phone, Truck } from 'lucide-react';
+import { FileText, RotateCcw, Search, ChevronDown, ChevronUp, AlertTriangle, Instagram, Edit2, X, Check, Trash2, Plus, Minus } from 'lucide-react';
 import { Sale } from '../types';
 
 interface SalesLogProps {
@@ -48,14 +48,14 @@ const SalesLog: React.FC<SalesLogProps> = ({ sales, onReturnSale, onUpdateSale, 
     const newItems = [...editingSale.items];
     newItems[idx] = { ...newItems[idx], [field]: value };
     if (field === 'price' || field === 'quantity') { newItems[idx].total = Number(newItems[idx].price) * Number(newItems[idx].quantity); }
-    const newTotal = newItems.reduce((sum, i) => sum + i.total, 0);
+    const newTotal = newItems.reduce((sum: number, i: any) => sum + i.total, 0);
     setEditingSale({ ...editingSale, items: newItems, totalAmount: newTotal });
   };
 
   const handleRemoveItem = (idx: number) => {
     if (editingSale.items.length <= 1) return alert("لا يمكن حذف آخر قطعة");
     const newItems = editingSale.items.filter((_: any, i: number) => i !== idx);
-    const newTotal = newItems.reduce((sum, i) => sum + i.total, 0);
+    const newTotal = newItems.reduce((sum: number, i: any) => sum + i.total, 0);
     setEditingSale({ ...editingSale, items: newItems, totalAmount: newTotal });
   };
 
